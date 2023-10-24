@@ -1,0 +1,36 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.7.33920.267
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FanControl.AcerAspireTC895", "FanControl.AcerAspireTC895\FanControl.AcerAspireTC895.csproj", "{31C8CA00-0397-48AB-A9A4-7D7C92F0FAFF}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "FanControl", "FanControl", "{011A4E17-63AD-42FB-B5BB-A3C6155BE667}"
+	ProjectSection(SolutionItems) = preProject
+		FanControl\FanControl.Plugins.dll = FanControl\FanControl.Plugins.dll
+		FanControl\FanControl.Plugins.pdb = FanControl\FanControl.Plugins.pdb
+	EndProjectSection
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Test", "Test\Test.csproj", "{B7C09DA7-38C7-4F5D-A4B2-51C00022C6CB}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{31C8CA00-0397-48AB-A9A4-7D7C92F0FAFF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{31C8CA00-0397-48AB-A9A4-7D7C92F0FAFF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{31C8CA00-0397-48AB-A9A4-7D7C92F0FAFF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{31C8CA00-0397-48AB-A9A4-7D7C92F0FAFF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B7C09DA7-38C7-4F5D-A4B2-51C00022C6CB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B7C09DA7-38C7-4F5D-A4B2-51C00022C6CB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B7C09DA7-38C7-4F5D-A4B2-51C00022C6CB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {73604418-F854-491A-BD3B-B1703F79047E}
+	EndGlobalSection
+EndGlobal

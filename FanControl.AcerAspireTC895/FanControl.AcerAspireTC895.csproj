@@ -1,0 +1,18 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net48</TargetFramework>
+    <Nullable>enable</Nullable>
+    <LangVersion>11</LangVersion>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Reference Include="FanControl.Plugins">
+      <HintPath>..\FanControl\FanControl.Plugins.dll</HintPath>
+    </Reference>
+    <Reference Include="StagWare.FanControl">
+      <HintPath>C:\Program Files (x86)\NoteBook FanControl\StagWare.FanControl.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+
+</Project>
