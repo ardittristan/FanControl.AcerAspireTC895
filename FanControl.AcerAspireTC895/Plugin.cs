@@ -1,8 +1,5 @@
-﻿using System;
-using System.IO;
-using System.Threading;
-using FanControl.Plugins;
-using StagWare.FanControl.Plugins;
+﻿using FanControl.Plugins;
+using LibreHardwareMonitor.Hardware;
 
 namespace FanControl.AcerAspireTC895;
 
@@ -12,139 +9,50 @@ public class Plugin : IPlugin
     public string Name => "Acer Aspire TC-895 Fan";
 
     public void Initialize() =>
-        ec = LoadEC();
+        (_computer ??= new Computer()).Open();
 
     public void Load(IPluginSensorsContainer container) =>
         container.ControlSensors.Add(new FanControlSensor());
 
-    public void Close() =>
-        ec = null;
+    public void Close() => _computer?.Close();
 
-    static Plugin()
-    {
-        NbfcResolver.Setup(AppDomain.CurrentDomain);
-
-        AppDomain.CurrentDomain.ProcessExit += (s, e) =>
-        {
-            if (ec == null)
-                return;
-            try
-            {
-                ec.ReleaseLock();
-                ec.Dispose();
-            }
-            catch
-            {
-                // ignored
-            }
-        };
-    }
+    private Computer? _computer;
 
     // ReSharper disable once InconsistentNaming
-    private static IEmbeddedController? ec;
-
-    // ReSharper disable once InconsistentNaming ParameterHidesMember
-    internal static byte ECRead(byte register, IEmbeddedController? ec = null, bool verbose = false)
+    internal static byte ECRead(byte register, bool verbose = false)
     {
-        byte b = 0;
+        using WinEC ec = new();
 
-        if (ec == null)
-            AccessEcSynchronized(cb);
-        else
-            AccessEcSynchronized(cb, ec);
+        byte b = ec.ReadByte(register);
+
+        if (verbose)
+            Console.WriteLine($"{b} (0x{b:X2}) | {register}");
 
         return b;
-
-        // ReSharper disable once InconsistentNaming ParameterHidesMember VariableHidesOuterVariable
-        void cb(IEmbeddedController ec)
-        {
-            b = ec.ReadByte(register);
-            if (verbose)
-                Console.WriteLine($"{b} (0x{b:X2})");
-        }
-    }
-
-    // ReSharper disable once InconsistentNaming ParameterHidesMember
-    internal static void ECWrite(byte register, byte value, IEmbeddedController? ec = null)
-    {
-        if (ec == null)
-            AccessEcSynchronized(cb);
-        else
-            AccessEcSynchronized(cb, ec);
-        return;
-
-        // ReSharper disable once InconsistentNaming ParameterHidesMember VariableHidesOuterVariable
-        void cb(IEmbeddedController ec)
-        {
-            ec.WriteByte(register, value);
-        }
     }
 
     // ReSharper disable once InconsistentNaming
-    private static IEmbeddedController? LoadEC()
+    internal static void ECWrite(byte register, byte value)
     {
-        FanControlPluginLoader<IEmbeddedController> ecLoader = new(Path.Combine(NbfcResolver.Path, "Plugins"));
+        using WinEC ec = new();
 
-        if (ecLoader.FanControlPlugin == null)
-        {
-            Console.Error.WriteLine("Could not load EC plugin. Try to run with elevated privileges.");
-            return null;
-        }
-
-        ecLoader.FanControlPlugin.Initialize();
-
-        if (ecLoader.FanControlPlugin.IsInitialized)
-            return ecLoader.FanControlPlugin;
-
-        Console.Error.WriteLine("EC initialization failed. Try to run with elevated privileges.");
-        ecLoader.FanControlPlugin.Dispose();
-
-        return null;
-    }
-
-    private static void AccessEcSynchronized(Action<IEmbeddedController> callback)
-    {
-        if (ec != null)
-            AccessEcSynchronized(callback, ec);
-        else
-            using (ec = LoadEC())
-                if (ec != null)
-                    AccessEcSynchronized(callback, ec);
-    }
-
-    // ReSharper disable once ParameterHidesMember
-    private static void AccessEcSynchronized(Action<IEmbeddedController> callback, IEmbeddedController ec)
-    {
-        if (ec.AcquireLock(200))
-            try
-            {
-                callback(ec);
-            }
-            finally
-            {
-                ec.ReleaseLock();
-            }
-        else
-            Console.Error.WriteLine("Could not acquire EC lock");
+        ec.WriteByte(register, value);
     }
 
     public static void Test()
     {
 #if DEBUG
-        using (ec = LoadEC())
+        (new Computer()).Open();
+
+        Console.WriteLine("reading");
+
+        while (true)
         {
-            if (ec == null)
-                return;
-
-            Console.WriteLine("reading");
-
-            while (true)
-            {
-                ECRead(0xC0, ec, true);
-                ECWrite(0xC0, 0x01, ec);
-                ECRead(0xC0, ec, true);
-                Thread.Sleep(10);
-            }
+            ECRead(0xC0, true);
+            ECWrite(0xC0, 0x01);
+            ECRead(0xC0, true);
+            ECRead(FanControlSensor.ReadAddress, true);
+            Thread.Sleep(10);
         }
 #endif
     }

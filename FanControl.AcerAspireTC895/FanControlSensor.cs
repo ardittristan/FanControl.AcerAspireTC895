@@ -1,6 +1,4 @@
-﻿using System;
-using System.Threading;
-using FanControl.Plugins;
+﻿using FanControl.Plugins;
 
 namespace FanControl.AcerAspireTC895;
 
@@ -26,7 +24,6 @@ public class FanControlSensor : IPluginControlSensor
 
         void Action()
         {
-            NbfcResolver.Setup(AppDomain.CurrentDomain);
             while (_running)
             {
                 Plugin.ECWrite(WriteAddress, _setLevel);

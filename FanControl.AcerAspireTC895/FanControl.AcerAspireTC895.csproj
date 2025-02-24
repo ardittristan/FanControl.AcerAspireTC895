@@ -1,17 +1,27 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>net48</TargetFramework>
+    <TargetFrameworks>net48;net8.0</TargetFrameworks>
     <Nullable>enable</Nullable>
-    <LangVersion>11</LangVersion>
+    <LangVersion>12</LangVersion>
+    <ImplicitUsings>enable</ImplicitUsings>
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="LibreHardwareMonitorLib" Version="0.9.4">
+      <GeneratePathProperty>True</GeneratePathProperty>
+      <ExcludeAssets>all</ExcludeAssets>
+    </PackageReference>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="LibreHardwareMonitorLib">
+      <HintPath>$(PKGLibreHardwareMonitorLib)\lib\netstandard2.0\LibreHardwareMonitorLib.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
     <Reference Include="FanControl.Plugins">
       <HintPath>..\FanControl\FanControl.Plugins.dll</HintPath>
-    </Reference>
-    <Reference Include="StagWare.FanControl">
-      <HintPath>C:\Program Files (x86)\NoteBook FanControl\StagWare.FanControl.dll</HintPath>
+      <Private>False</Private>
     </Reference>
   </ItemGroup>
 
